@@ -32,7 +32,7 @@ type Node struct {
 	Index  int   `json:"index"`
 }
 
-// NewNode returns new node referred by Tree.index
+// newNode returns new node referred by Tree.index
 func (t *tree) newNode(p *Node) *Node {
 	t.Index = t.Index + 1
 	return &Node{
@@ -61,7 +61,7 @@ func (t *Node) Depth() int {
 	return result
 }
 
-// Children returns sliced combination [ Left, Center, Right ]
+// Children returns slice [ Left, Center, Right ]
 func (t *Node) Children() []*Node {
 	result := make([]*Node, 3)
 	result[left] = t.Left
@@ -90,7 +90,7 @@ func Dig(nodes ...*Node) []*Node {
 	return result
 }
 
-// New treus regular bree structured root node
+// New returns root node structured regularlly
 func New(depth int) *Node {
 	tree := newTree()
 	node := tree.newNode(nil)
@@ -109,6 +109,7 @@ func New(depth int) *Node {
 	return node
 }
 
+// ServeHTTP handles net/http interface.
 func (t *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data, err := json.Marshal(t)
 	if err != nil {
