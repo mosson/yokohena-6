@@ -260,3 +260,67 @@ func TestFind(t *testing.T) {
 		t.Errorf("expected nil")
 	}
 }
+
+func TestConFind(t *testing.T) {
+	node := New(3)
+
+	if node.ConFind(2) != node.Left {
+		t.Errorf("expected %v, actual %v", node.Left.Index, node.ConFind(2))
+	}
+
+	if node.ConFind(3) != node.Center {
+		t.Errorf("expected %v, actual %v", node.Center.Index, node.ConFind(3))
+	}
+
+	if node.ConFind(4) != node.Right {
+		t.Errorf("expected %v, actual %v", node.Right.Index, node.ConFind(4))
+	}
+
+	if node.ConFind(5) != node.Left.Left {
+		t.Errorf("expected %v, actual %v", node.Left.Left.Index, node.ConFind(5))
+	}
+
+	if node.ConFind(9) != node.Center.Center {
+		t.Errorf("expected %v, actual %v", node.Center.Center.Index, node.ConFind(9))
+	}
+
+	if node.ConFind(13) != node.Right.Right {
+		t.Errorf("expected %v, actual %v", node.Right.Right.Index, node.ConFind(13))
+	}
+
+	if node.ConFind(44) != nil {
+		t.Errorf("expected nil")
+	}
+}
+
+func BenchmarkFind(b *testing.B) {
+	node := New(3)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		node.Find(2)
+		node.Find(3)
+		node.Find(4)
+		node.Find(5)
+		node.Find(9)
+		node.Find(13)
+		node.Find(44)
+	}
+}
+
+func BenchmarkConFind(b *testing.B) {
+	node := New(3)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		node.ConFind(2)
+		node.ConFind(3)
+		node.ConFind(4)
+		node.ConFind(5)
+		node.ConFind(9)
+		node.ConFind(13)
+		node.ConFind(44)
+	}
+}

@@ -76,3 +76,30 @@ func TestAll(t *testing.T) {
 		}
 	}
 }
+
+func TestConAll(t *testing.T) {
+	for k, v := range tests {
+		r := conSolve(k)
+		if r != v {
+			t.Errorf("%v: expected %v, actual %v", k, v, r)
+		}
+	}
+}
+
+func BenchmarkAll(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for k := range tests {
+			solve(k)
+		}
+	}
+}
+
+func BenchmarkConAll(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for k := range tests {
+			conSolve(k)
+		}
+	}
+}

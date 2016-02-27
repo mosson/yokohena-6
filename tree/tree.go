@@ -136,3 +136,48 @@ func (t *Node) Find(index int) *Node {
 	}
 	return result
 }
+
+// ConFind returns the node having argument index by concorrently
+func (t *Node) ConFind(index int) *Node {
+	if t.Index == index {
+		return t
+	}
+
+	var result *Node
+	resultCh := make(chan *Node, 1)
+	nilCh := make(chan bool)
+	childlen := t.Children()
+	nilCount := 0
+
+	for _, child := range childlen {
+		go func(c *Node) {
+			if c != nil {
+				r := c.ConFind(index)
+				if r != nil {
+					resultCh <- r
+				} else {
+					nilCh <- true
+				}
+			} else {
+				nilCh <- true
+			}
+		}(child)
+	}
+
+loop:
+	for {
+		select {
+		case r := <-resultCh:
+			result = r
+			break loop
+		case <-nilCh:
+
+			nilCount = nilCount + 1
+			if nilCount >= len(childlen) {
+				break loop
+			}
+		}
+	}
+
+	return result
+}
