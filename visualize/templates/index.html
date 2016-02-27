@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualize</title>
+</head>
+
+<body>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+  <script type="text/javascript">
+    !(function(d3) {
+      function makeSVG(width, height) {
+        return d3.select("body").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .attr("transform", "translate(50,50)");
+      }
+
+      function children(d) {
+        if (d.left && d.center && d.right)
+          return [d.left, d.center, d.right];
+      }
+
+      function main() {
+        var width = 800;
+        var height = 500;
+
+        var svg = makeSVG(width, height);
+
+        var tree = d3.layout.tree()
+          .size([760, 400])
+          .children(children);
+
+        d3.json("/api", function(data) {
+          var nodes = tree.nodes(data);
+          var links = tree.links(nodes);
+
+          var node = svg.selectAll(".node")
+            .data(nodes)
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) {
+              return "translate(" + d.x + "," + (d.y + 10) + ")";
+            });
+
+          node.append("circle")
+            .attr("r", 4)
+            .attr("fill", "steelblue");
+
+          node.append("text")
+            .text(function(d) {
+              return d.index
+            })
+            .attr("y", 10);
+
+          var diagonal = d3.svg.diagonal()
+            .projection(function(d) {
+              return [d.x, d.y + 10];
+            });
+
+          svg.selectAll(".link")
+            .data(links)
+            .enter()
+            .append("path")
+            .attr("class", "link")
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("d", diagonal);
+
+        });
+      }
+
+      main();
+    })(d3);
+  </script>
+</body>
+
+</html>
