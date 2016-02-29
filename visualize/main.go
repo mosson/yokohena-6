@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"lesson2/tree"
 	"net/http"
 	"path/filepath"
 	"sync"
 	"text/template"
+	"yokohena-6/tree"
 )
 
 type templateHandler struct {
